@@ -13,7 +13,7 @@ new Vue({
             domain: 'development.auth.fool.com',
             client_id: '0CJYkY4FfNva9Cyaz6wxZrdivAUWuol3',
             audience: 'https://www.fool.com/membership',
-            scope: 'email profile openid accessible_services'
+            scope: 'email profile openid accessible_services' // accessible_services
         });
 
         this.status = "ready";

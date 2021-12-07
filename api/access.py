@@ -60,7 +60,7 @@ def requires_scope(scope):
                                                 "Unable to parse authentication"
                                                 " token."}, 401)
 
-                return f(request, *args, **kwargs)
+                return f(request, access_token=payload, *args, **kwargs)
             raise PermissionDenied({"code": "invalid_header",
                                     "description": "Unable to find appropriate key"}, 401)
 
