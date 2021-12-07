@@ -1,0 +1,37 @@
+version: "3.9"
+
+services:
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    labels:
+      # The traefik labels here are related to proxy-network - https://github.com/themotleyfool/proxy-network
+      # This tells Traefik to listen for this container on the network
+      - traefik.enable=true
+      # Set the python container so port 8000 is picked up by Traefik's HTTP network
+      - traefik.http.services.sample-auth-spa.loadbalancer.server.port=8000
+      - traefik.http.routers.sample-auth-spa.entrypoints=web
+      # Set the domain that gets picked up by Traefik's HTTP network
+      - traefik.http.routers.sample-auth-spa.rule=Host(`sample-auth-spa.local.fool.com`)
+      # Redirect the above via HTTPS
+      - traefik.http.middlewares.force_https.redirectscheme.scheme=https
+      - traefik.http.routers.sample-auth-spa.middlewares=force_https@docker
+      - traefik.http.routers.sample-auth-spa_https.entrypoints=websecure
+      # Set the domain that gets picked up by Traefik's HTTPS network
+      - traefik.http.routers.sample-auth-spa_https.rule=Host(`sample-auth-spa.local.fool.com`)
+      # Tell Traefik that the certs are on the local machine.
+      # This works in tandem with the dynamic config present in the Traefik container.
+      - traefik.http.routers.sample-auth-spa_https.tls=true
+    networks:
+      - default
+      - proxy-network
+
+networks:
+  default:
+  proxy-network:
+    external:
+      name: proxy-network

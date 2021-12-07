@@ -1,0 +1,27 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome to my SPA!</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="https://cdn.auth0.com/js/auth0-spa-js/1.12/auth0-spa-js.production.js"></script>
+</head>
+<body>
+    <h1>Welcome to my SPA!</h1>
+    <div id="app">
+        <button v-on:click="getStocks">Get Stocks</button>
+        <p>Status: {status}</p>
+
+        <dl>
+            <template v-for="stock in stocks">
+                <dt>{stock.ticker}</dt>
+                <dd>{stock.name}</dt>
+            </template>
+        </dl>
+    </div>
+
+    <script type="module" src="{% static 'js/index.js' %}"></script>
+</body>
+</html>
